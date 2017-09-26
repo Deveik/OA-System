@@ -25,8 +25,12 @@ public class AuthorityContrller {
 				Subject subject = SecurityUtils.getSubject();
 				//2.调用登录方法
 				UsernamePasswordToken token = new UsernamePasswordToken(staff.getUserName(), staff.getPassword());
-				subject.login(token);//当这一代码执行时，就会自动跳入到AuthRealm中认证方法
 				
+				System.out.println(token==null);
+				System.out.println(subject==null);
+				
+				subject.login(token);//当这一代码执行时，就会自动跳入到AuthRealm中认证方法
+
 				//3.登录成功时，就从Shiro中取出用户的登录信息
 				UserInfornation user = (UserInfornation) subject.getPrincipal();
 				

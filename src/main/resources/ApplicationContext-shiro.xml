@@ -32,7 +32,10 @@
     </bean>  
   
   	<!-- 安全管理 -->
+  	<bean id="securityManager" class="org.apache.shiro.mgt.DefaultSecurityManager">  
+  	<!--  
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">  
+  	-->
         <!--设置自定义realm-->  
         <property name="realm" ref="monitorRealm" />  
     </bean>   
@@ -41,11 +44,12 @@
     <bean id="monitorRealm" class="com.oa.authority.shiro.AuthRealm">
     	<!-- 自定义密码加密算法  -->
 		<property name="credentialsMatcher" ref="passwordMatcher"/>
+		
     </bean>  
     
     <!-- 设置密码加密策略 md5hash -->
 	<bean id="passwordMatcher" class="com.oa.authority.shiro.CustomCredentialsMatcher"/>
-    
+   
     <!-- 安全管理器 -->
     <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">  
    		<property name="securityManager" ref="securityManager"/>      

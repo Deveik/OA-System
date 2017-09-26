@@ -1,5 +1,7 @@
 ﻿package com.oa.authority.shiro;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,9 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.oa.staff.service.IStaffService;
+
+import sun.misc.MessageUtils;
+
 import com.oa.staff.entity.UserInfornation;
 
 /**
@@ -25,6 +30,9 @@ public class AuthRealm extends AuthorizingRealm {
 	
 	@Autowired
 	private IStaffService staffService;
+	
+	private String username = "doubikai";
+	private String password = "123456";
 	
 	//授权   当jsp页面出现Shiro标签时，就会执行授权方法
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection pc) {
@@ -48,19 +56,29 @@ public class AuthRealm extends AuthorizingRealm {
 	
 	//认证   token 代表用户在界面输入的用户名和密码
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-		System.out.println("认证");
 		
 		//1.向下转型
 		UsernamePasswordToken upToken  = (UsernamePasswordToken) token;
 		
 		//2.调用业务方法，实现根据用户名查询
 		UserInfornation user = staffService.findByUserName(upToken.getUsername());
-		
-		if(user != null) {
-			AuthenticationInfo info = new SimpleAuthenticationInfo(user,user.getPassword(),this.getName());
-			return info;   //此处如果返回，就会立即进入到密码比较器
+		if(user!=null){
+				return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
 		}
-		return null;//就会出现异常
+		return null;
+//		try {
+//			MessageDigest md5 = MessageDigest.getInstance("MD5");
+//	
+//			if(user != null) {
+//				AuthenticationInfo info = new SimpleAuthenticationInfo(user.getUserName(),md5.digest(user.getPassword().getBytes()),this.getName());
+//				return info;   //此处如果返回，就会立即进入到密码比较器
+//			}
+//			
+//		} catch (NoSuchAlgorithmException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;//就会出现异常
 	}
 	
 }
